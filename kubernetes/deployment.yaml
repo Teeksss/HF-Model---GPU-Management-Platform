@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-platform-backend
+  labels:
+    app: ai-platform
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-platform
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: ai-platform
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: ai-platform-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: ai-platform-secrets
+              key: database-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ai-platform-secrets
+              key: jwt-secret
+        - name: REDIS_URL
+          value: "redis://redis:6379/0"
+        - name: QDRANT_URL
+          value: "http://qdrant:6333"
+        - name: MODEL_STORAGE_PATH
+          value: "/app/models"
+        resources:
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+            nvidia.com/gpu: 1
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+        volumeMounts:
+        - name: models-volume
+          mountPath: /app/models
+        - name: cache-volume
+          mountPath: /app/cache
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 60
+      volumes:
+      - name: models-volume
+        persistentVolumeClaim:
+          claimName: models-pvc
+      - name: cache-volume
+        persistentVolumeClaim:
+          claimName: cache-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-platform-frontend
+  labels:
+    app: ai-platform
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-platform
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: ai-platform
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ai-platform-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://ai-platform-backend-service:8000"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 60
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: ai-platform
+    tier: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-platform
+      tier: database
+  template:
+    metadata:
+      labels:
+        app: ai-platform
+        tier: database
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:14
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: ai-platform-secrets
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ai-platform-secrets
+              key: postgres-password
+        - name: POSTGRES_DB
+          value: "aiplatform"
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc

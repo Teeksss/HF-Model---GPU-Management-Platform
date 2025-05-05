@@ -1,0 +1,74 @@
+/* Ana uygulama stili */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Kaydırma çubuğu stilleri */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Koyu tema için kaydırma çubuğu stilleri */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #2d3748;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #4a5568;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+}
+
+/* Temel sayfa geçişleri için animasyon */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Mobil görünüm için ek stillemeleri */
+@media (max-width: 768px) {
+  .card-responsive {
+    margin: 10px 0;
+  }
+  
+  .hide-on-mobile {
+    display: none;
+  }
+}

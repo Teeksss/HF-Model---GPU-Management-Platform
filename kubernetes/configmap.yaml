@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-platform-config
+data:
+  ENVIRONMENT: "production"
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  REDIS_URL: "redis://redis-service:6379/0"
+  QDRANT_URL: "http://qdrant-service:6333"
+  MODEL_STORAGE_PATH: "/app/models"
+  HF_CACHE_DIR: "/app/cache"
+  LOG_LEVEL: "INFO"
+  WORKERS: "2"
+  CORS_ORIGINS: |
+    [
+      "https://ai-platform.example.com",
+      "http://localhost:3000"
+    ]

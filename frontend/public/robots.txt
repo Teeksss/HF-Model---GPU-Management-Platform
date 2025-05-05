@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /dashboard
+Disallow: /models
+Disallow: /gpu-monitor
+Disallow: /users
+Disallow: /profile
+Disallow: /login
+Disallow: /register
