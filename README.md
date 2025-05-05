@@ -1,43 +1,28 @@
-# Modüler AI Yönetim Platformu
+# HF Model & GPU Management Platform
 
-Hugging Face modellerinin yönetilebildiği, GPU kaynaklarının etkin bir şekilde optimize edildiği, kullanıcı dostu bir arayüzle desteklenen, güvenli ve yüksek performanslı bir Modüler AI Yönetim Platformu.
+## Proje Amacı
+Hugging Face modellerinin yönetimi ve GPU kaynaklarının optimize kullanımı için eksiksiz, profesyonel bir platform sağlar.
 
 ## Özellikler
+- Hugging Face model indirme/güncelleme
+- GPU kullanım izleme ve dinamik GPU atama
+- JWT tabanlı kullanıcı yönetimi (Login/Register/Refresh Token)
+- Docker, Kubernetes (Helm Chart) dağıtım desteği
+- CI/CD Pipeline (Backend + Frontend Test)
+- Grafana ve Prometheus ile canlı sistem izleme
+- Redis ile hızlı caching
+- Tam OpenAPI (Swagger) desteği
+- Sağlam dökümantasyon (Kurulum, API Kullanımı, Admin Rehberi)
 
-- **Model Yönetimi**: Hugging Face Hub'dan model indirme, versiyon yönetimi ve model bilgilerini görüntüleme
-- **GPU Optimizasyonu**: Modelleri GPU'ya yükleme, optimal GPU seçimi ve GPU izleme
-- **Kullanıcı Yönetimi**: Çok kullanıcılı mimari, rol tabanlı erişim kontrolü
-- **Ölçeklenebilirlik**: Kubernetes destekli mikroservis mimarisi
-- **İzleme**: GPU, CPU, bellek ve API kullanımının gerçek zamanlı izlenmesi
-- **Veritabanı**: PostgreSQL ilişkisel veritabanı, Qdrant vektör veritabanı
-- **Önbellekleme**: Redis ile yüksek performanslı önbellekleme
-
-## Sistem Mimarisi
-
-Platform, aşağıdaki bileşenlerden oluşmaktadır:
-
-- **Frontend**: React.js ve Chakra UI ile geliştirilmiş modern kullanıcı arayüzü
-- **Backend**: FastAPI ile geliştirilmiş yüksek performanslı Python API
-- **Veritabanı**: PostgreSQL (ilişkisel veri) ve Qdrant (vektör veri)
-- **Önbellek**: Redis önbellekleme sistemi
-- **İzleme**: Prometheus ve Grafana ile sistem izleme
-- **Orkestrasyon**: Docker ve Kubernetes ile servis orkestrasyonu
+## Kullanılan Teknolojiler
+FastAPI, ReactJS, PostgreSQL, Qdrant, Redis, Docker, Kubernetes, Prometheus, Grafana, Helm, GitHub Actions
 
 ## Kurulum
-
-### Docker ile Kurulum
-
 ```bash
-# Repoyu klonlayın
-git clone https://github.com/kullanici/ai-model-platform.git
-cd ai-model-platform
+bash repo_setup.sh
+```
 
-# .env dosyalarını yapılandırın
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-
-# Docker servislerini başlatın
-docker-compose up -d
-
-# İzleme araçlarını başlatın
-docker-compose -f docker-compose.monitoring.yml up -d
+## Katkıda Bulunma
+- Branch açın (`feature/`, `bugfix/`)
+- Testler geçmeden PR merge edilmez
+- Kodlama standartlarına uyun (Black, Prettier)
